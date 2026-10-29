@@ -1,669 +1,561 @@
-
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#103b2d">
-<title>گیاه‌بان | هوش مصنوعی سلامت گیاه</title>
-
+<title>گیاه‌بان | تشخیص هوشمند سلامت گیاه</title>
 <style>
-:root {
-  --g: #176b4d;
-  --d: #103b2d;
-  --bg: #f3f8f4;
-  --line: #dce9df;
-  --txt: #183329;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--txt);
-  font: 16px/1.9 Tahoma, Arial, sans-serif;
-}
-header {
-  background: linear-gradient(130deg,#103b2d,#18734f);
-  color: #fff;
-  padding: 26px 16px;
-}
-.wrap {
-  max-width: 960px;
-  width: calc(100% - 24px);
-  margin: auto;
-}
-.brand { display:flex; gap:12px; align-items:center; }
-.logo {
-  font-size:30px;
-  background:#ffffff20;
-  border-radius:16px;
-  padding:5px 13px;
-}
-h1 { margin:0; font-size:clamp(24px,5vw,36px); }
-header p { margin:8px 0 0; color:#e2f5e8; }
-main { padding:20px 0 40px; }
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-.card {
-  background:white;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 6px 20px #123a2510;
-  min-width:0;
-}
-.full { grid-column:1/-1; }
-h2 { font-size:19px; color:var(--d); margin:0 0 12px; }
-label {
-  display:block;
-  font-weight:bold;
-  margin:10px 0 5px;
-  font-size:14px;
-}
-input[type=text],select,textarea {
-  width:100%;
-  padding:11px;
-  border:1px solid #cddfd1;
-  border-radius:11px;
-  font:inherit;
-  background:#fff;
-  color:var(--txt);
-}
-button,.filebtn {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:0;
-  border-radius:11px;
-  padding:10px 14px;
-  font:inherit;
-  font-weight:bold;
-  cursor:pointer;
-  text-decoration:none;
-}
-.primary { background:var(--g); color:#fff; }
-.secondary { background:#e8f4eb; color:var(--g); }
-.outline { background:#fff; border:1px solid var(--line); color:var(--txt); }
-.danger { background:#fff0ef; color:#9c3030; }
-.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-.upload {
-  border:2px dashed #b7d6c0;
-  border-radius:14px;
-  background:#f7fcf8;
-  text-align:center;
-  padding:14px;
-}
-.muted { font-size:12px; color:#62766b; }
-#preview {
-  display:none;
-  width:100%;
-  max-height:320px;
-  object-fit:contain;
-  margin-top:12px;
-  border-radius:12px;
-  background:#eef4ef;
-}
-.status {
-  padding:11px 13px;
-  border:1px solid var(--line);
-  background:#f1f7f2;
-  border-radius:11px;
-  margin-top:12px;
-  font-size:14px;
-}
-.warn { background:#fff8e8; border-color:#eedca7; color:#705418; }
-.error { background:#fff0ef; border-color:#f0c9c5; color:#8e2e2e; }
-.checks {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-}
-.check {
-  display:flex;
-  gap:7px;
-  align-items:center;
-  background:#f6faf7;
-  border:1px solid var(--line);
-  border-radius:9px;
-  padding:7px;
-  font-size:13px;
-}
-.check input { accent-color:var(--g); }
-.result { display:none; }
-.meter {
-  height:8px;
-  background:#e6eee8;
-  border-radius:20px;
-  overflow:hidden;
-  margin:5px 0 12px;
-}
-.meter span { display:block; height:100%; background:#24a36f; }
-.row,.history { padding:10px 0; border-bottom:1px solid var(--line); }
-.pill {
-  font-size:12px;
-  background:#e8f4eb;
-  color:var(--g);
-  border-radius:20px;
-  padding:2px 8px;
-}
-footer {
-  text-align:center;
-  color:#62766b;
-  font-size:12px;
-  padding:0 15px 25px;
-}
-@media(max-width:700px) {
-  .grid { grid-template-columns:1fr; }
-  .full { grid-column:auto; }
-  .card { padding:15px; }
-}
-@media print {
-  header,.no-print,footer { display:none!important; }
-  .grid { display:block; }
-  .card { box-shadow:none; margin-bottom:12px; }
-}
+:root{--green:#176b4d;--dark:#103b2d;--bg:#f3f8f4;--line:#dce9df;--text:#183329}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.9 Tahoma,Arial,sans-serif}
+header{background:linear-gradient(130deg,#103b2d,#18734f);color:white;padding:25px 16px}
+.wrap{max-width:950px;width:calc(100% - 24px);margin:auto}
+h1{margin:0;font-size:clamp(25px,5vw,36px)}
+header p{margin:6px 0;color:#e2f5e8}
+main{padding:20px 0 35px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;min-width:0;box-shadow:0 5px 18px #123a250a}
+.full{grid-column:1/-1}
+h2{font-size:19px;color:var(--dark);margin:0 0 12px}
+label{display:block;font-weight:bold;margin:9px 0 5px}
+input[type=text],select,textarea{width:100%;padding:11px;border:1px solid #cddfd1;border-radius:10px;font:inherit;background:white;color:var(--text)}
+button,.filebtn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:bold;cursor:pointer;text-decoration:none}
+button:disabled{opacity:.55;cursor:wait}
+.primary{background:var(--green);color:white}
+.secondary{background:#e8f4eb;color:var(--green)}
+.outline{background:white;border:1px solid var(--line);color:var(--text)}
+.danger{background:#fff0ef;color:#9c3030}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.upload{border:2px dashed #b7d6c0;border-radius:14px;background:#f7fcf8;text-align:center;padding:15px}
+.muted{font-size:12px;color:#62766b}
+#preview{display:none;width:100%;max-height:320px;object-fit:contain;margin-top:12px;border-radius:12px;background:#eef4ef}
+.status{padding:11px 13px;border:1px solid var(--line);background:#f1f7f2;border-radius:11px;margin-top:12px;font-size:14px;overflow-wrap:anywhere}
+.warn{background:#fff8e8;border-color:#eedca7;color:#705418}
+.error{background:#fff0ef;border-color:#f0c9c5;color:#8e2e2e}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.check{display:flex;gap:7px;align-items:center;background:#f6faf7;border:1px solid var(--line);border-radius:9px;padding:7px;font-size:13px}
+.check input{accent-color:var(--green)}
+.result{display:none}
+.meter{height:8px;background:#e6eee8;border-radius:20px;overflow:hidden;margin:5px 0 12px}
+.meter span{display:block;height:100%;background:#24a36f}
+.row,.history{padding:10px 0;border-bottom:1px solid var(--line)}
+.pill{font-size:12px;background:#e8f4eb;color:var(--green);border-radius:20px;padding:2px 8px}
+footer{text-align:center;color:#62766b;font-size:12px;padding:0 15px 25px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.card{padding:15px}}
+@media print{header,.no-print,footer{display:none!important}.grid{display:block}.card{box-shadow:none;margin-bottom:12px}}
 </style>
 </head>
-
 <body>
 <header>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo">🌱</div>
-      <div>
-        <h1>گیاه‌بان</h1>
-        <div>دستیار هوشمند بررسی سلامت گیاه</div>
-      </div>
-    </div>
-    <p>تصویر برگ را وارد کن و با مدل یادگیری ماشین، سه حدس برتر را بررسی کن.</p>
-  </div>
+ <div class="wrap">
+  <h1>🌱 گیاه‌بان</h1>
+  <p>دستیار هوشمند بررسی سلامت گیاه</p>
+  <p>تصویر برگ را انتخاب کن تا مدل، سه حدس برتر خود را نمایش دهد.</p>
+ </div>
 </header>
 
 <main class="wrap">
 <div class="grid">
 
 <section class="card">
-  <h2>۱. تصویر برگ</h2>
-  <div class="upload">
-    <div style="font-size:32px">📷</div>
-    <b>عکس واضح از یک برگ انتخاب کن</b>
-    <p class="muted">نور خوب و فوکوس روی برگ نتیجه را بهتر می‌کند.</p>
-    <div class="actions" style="justify-content:center">
-      <label class="filebtn primary" for="camera" style="margin:0">📸 گرفتن عکس</label>
-      <label class="filebtn secondary" for="gallery" style="margin:0">🖼️ انتخاب از گالری</label>
-    </div>
-    <input id="camera" type="file" accept="image/*" capture="environment" hidden>
-    <input id="gallery" type="file" accept="image/*" hidden>
+ <h2>۱. تصویر گیاه</h2>
+ <div class="upload">
+  <div style="font-size:32px">📷</div>
+  <b>از برگ عکس واضح بگیر</b>
+  <p class="muted">نور مناسب و فوکوس روی برگ به تحلیل کمک می‌کند.</p>
+  <div class="actions" style="justify-content:center">
+   <label class="filebtn primary" for="camera" style="margin:0">📸 گرفتن عکس</label>
+   <label class="filebtn secondary" for="gallery" style="margin:0">🖼️ انتخاب عکس</label>
   </div>
-
-  <img id="preview" alt="پیش‌نمایش برگ">
-
-  <div class="actions">
-    <button class="outline" id="clearPhoto">پاک کردن عکس</button>
-  </div>
-
-  <div class="status" id="status">
-    ابتدا عکس را انتخاب کن. اولین تحلیل ممکن است به دانلود مدل و اینترنت نیاز داشته باشد.
-  </div>
+  <input id="camera" type="file" accept="image/*" capture="environment" hidden>
+  <input id="gallery" type="file" accept="image/*" hidden>
+ </div>
+ <img id="preview" alt="پیش‌نمایش تصویر گیاه">
+ <div class="actions">
+  <button class="outline" id="clearPhoto" type="button">پاک کردن عکس</button>
+ </div>
+ <div class="status" id="status" role="status" aria-live="polite">
+  ابتدا عکس انتخاب کن. دانلود مدل در اولین اجرا ممکن است چند دقیقه طول بکشد.
+ </div>
 </section>
 
 <section class="card">
-  <h2>۲. مشخصات و علائم</h2>
+ <h2>۲. مشخصات و علائم</h2>
+ <label for="plantSearch">جست‌وجوی نام گیاه</label>
+ <input id="plantSearch" type="text" placeholder="مثلاً گوجه‌فرنگی">
+ <label for="plant">انتخاب گیاه</label>
+ <select id="plant"><option value="">نامشخص</option></select>
+ <p class="muted">انتخاب نام گیاه، مدل را به تشخیص آن گیاه محدود نمی‌کند.</p>
 
-  <label for="plantSearch">جست‌وجوی گیاه</label>
-  <input id="plantSearch" type="text" placeholder="نام گیاه را بنویس…">
+ <label>علائم قابل مشاهده</label>
+ <div id="symptoms" class="checks">
+  <label class="check"><input type="checkbox" value="لکه قهوه‌ای"> لکه قهوه‌ای</label>
+  <label class="check"><input type="checkbox" value="زردی برگ"> زردی برگ</label>
+  <label class="check"><input type="checkbox" value="پوسیدگی"> پوسیدگی</label>
+  <label class="check"><input type="checkbox" value="سفیدک"> سفیدک</label>
+  <label class="check"><input type="checkbox" value="خشکی حاشیه برگ"> خشکی حاشیه برگ</label>
+  <label class="check"><input type="checkbox" value="پیچیدگی برگ"> پیچیدگی برگ</label>
+  <label class="check"><input type="checkbox" value="حشره یا تار"> حشره یا تار</label>
+  <label class="check"><input type="checkbox" value="رشد ضعیف"> رشد ضعیف</label>
+ </div>
 
-  <label for="plant">انتخاب گیاه</label>
-  <select id="plant">
-    <option value="">نامشخص</option>
-  </select>
-
-  <p class="muted">
-    مدل تصویری این نسخه برای ۱۴ گروه گیاهی و ۳۸ حالت سلامت/بیماری آموزش دیده؛
-    فهرست گیاهان بیشتر از پوشش مدل است.
-  </p>
-
-  <label>علائم قابل مشاهده (اختیاری)</label>
-  <div id="symptoms" class="checks">
-    <label class="check"><input type="checkbox" value="لکه قهوه‌ای"> لکه قهوه‌ای</label>
-    <label class="check"><input type="checkbox" value="زردی برگ"> زردی برگ</label>
-    <label class="check"><input type="checkbox" value="پوسیدگی"> پوسیدگی</label>
-    <label class="check"><input type="checkbox" value="سفیدک"> سفیدک</label>
-    <label class="check"><input type="checkbox" value="خشکی حاشیه برگ"> خشکی حاشیه برگ</label>
-    <label class="check"><input type="checkbox" value="پیچیدگی برگ"> پیچیدگی برگ</label>
-    <label class="check"><input type="checkbox" value="حشره یا تار"> حشره یا تار</label>
-    <label class="check"><input type="checkbox" value="رشد ضعیف"> رشد ضعیف</label>
-  </div>
-
-  <label for="notes">یادداشت (اختیاری)</label>
-  <textarea id="notes" rows="2" placeholder="از چه زمانی علائم شروع شده؟"></textarea>
-
-  <div class="actions">
-    <button id="analyze" class="primary">🧠 تحلیل هوش مصنوعی</button>
-    <button id="save" class="secondary" disabled>ذخیره گزارش</button>
-  </div>
+ <label for="notes">توضیحات بیشتر (اختیاری)</label>
+ <textarea id="notes" rows="2" placeholder="علائم از چه زمانی شروع شده‌اند؟"></textarea>
+ <div class="actions">
+  <button id="analyze" class="primary" type="button">🧠 تحلیل تصویر</button>
+  <button id="save" class="secondary" type="button" disabled>ذخیره گزارش</button>
+ </div>
 </section>
 
 <section class="card full result" id="result">
-  <h2>۳. نتیجه تحلیل</h2>
-  <div id="resultBody"></div>
-  <div class="actions no-print">
-    <button id="print" class="outline">🖨️ چاپ / ذخیره PDF</button>
-    <button id="another" class="secondary">تحلیل عکس دیگر</button>
-  </div>
+ <h2>۳. نتیجهٔ تحلیل</h2>
+ <div id="resultBody"></div>
+ <div class="actions no-print">
+  <button id="print" class="outline" type="button">چاپ / ذخیره PDF</button>
+  <button id="another" class="secondary" type="button">تحلیل عکس دیگر</button>
+ </div>
 </section>
 
 <section class="card full">
-  <h2>گزارش‌های ذخیره‌شده</h2>
-  <p class="muted">گزارش‌ها فقط در حافظه همین مرورگر ذخیره می‌شوند.</p>
-  <div id="history"><p class="muted">هنوز گزارشی ذخیره نشده است.</p></div>
-  <div class="actions no-print">
-    <button id="clearHistory" class="danger">پاک کردن همه گزارش‌ها</button>
-  </div>
+ <h2>گزارش‌های ذخیره‌شده</h2>
+ <p class="muted">گزارش‌ها در حافظه همین مرورگر ذخیره می‌شوند.</p>
+ <div id="history"><p class="muted">هنوز گزارشی ذخیره نشده است.</p></div>
+ <div class="actions no-print">
+  <button id="clearHistory" class="danger" type="button">پاک کردن گزارش‌ها</button>
+ </div>
 </section>
 
 </div>
 </main>
 
 <footer>
-  گیاه‌بان ابزار کمکی آموزشی است، نه تشخیص قطعی.
-  قبل از مصرف سم یا تصمیم درمانی با کارشناس گیاه‌پزشکی مشورت کن.
+گیاه‌بان ابزار کمکی است، نه تشخیص قطعی. پیش از مصرف سم یا اقدام درمانی با کارشناس گیاه‌پزشکی مشورت کن.
 </footer>
 
 <script type="module">
-import { pipeline, env } from
-'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2';
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
 const $ = id => document.getElementById(id);
 
-const groups = {
-  'غلات':['گندم','جو','برنج','ذرت','جو دوسر','چاودار','سورگوم','ارزن'],
-  'سبزیجات':['گوجه‌فرنگی','خیار','بادمجان','فلفل دلمه‌ای','سیب‌زمینی','پیاز','سیر','هویج','کاهو','اسفناج','کلم','گل‌کلم','بروکلی','کدو','کدوحلوایی','تربچه','شلغم','بامیه','کرفس','لوبیاسبز','نخودفرنگی'],
-  'درختان میوه':['سیب','گلابی','به','هلو','شلیل','زردآلو','گیلاس','آلبالو','آلو','گوجه‌سبز','انار','انجیر','خرمالو','ازگیل','گردو','بادام','پسته','فندق','زیتون','خرما','انگور','کیوی','توت','توت‌فرنگی'],
-  'مرکبات':['پرتقال','نارنگی','لیموترش','لیموشیرین','گریپ‌فروت','نارنج','بالنگ'],
-  'حبوبات و روغنی':['نخود','عدس','لوبیا','باقلا','سویا','ماش','کلزا','آفتابگردان','کنجد','بادام‌زمینی'],
-  'دارویی':['زعفران','نعناع','ریحان','آویشن','رزماری','اسطوخودوس','بابونه','زیره','رازیانه','گشنیز','شوید','جعفری','شنبلیله','زنجبیل','زردچوبه'],
-  'صنعتی و علوفه‌ای':['پنبه','نیشکر','چغندرقند','یونجه','شبدر','اسپرس'],
-  'زینتی و آپارتمانی':['رز','ارکیده','شمعدانی','آنتوریوم','دیفن‌باخیا','فیکوس','سانسوریا','زامیفولیا','پتوس','مونسترا','دراسنا','کاکتوس','ساکولنت','آلوئه‌ورا','سرخس','بونسای','لاله','نرگس','یاس','گل کاغذی'],
-  'دیگر گیاهان':['چای','قهوه','بامبو','اکالیپتوس','کاج','سرو','بلوط','افرا','صنوبر','بید']
+const MODEL_ID =
+ 'onnx-community/mobilenet_v2_1.0_224-plant-disease-identification-ONNX';
+
+const HISTORY_KEY = 'giyahban_reports_v2';
+const MODEL_TIMEOUT = 240000;
+const ANALYSIS_TIMEOUT = 90000;
+
+const plantGroups = {
+ 'غلات':['گندم','جو','برنج','ذرت','جو دوسر','چاودار','سورگوم','ارزن'],
+ 'سبزیجات':['گوجه‌فرنگی','خیار','بادمجان','فلفل دلمه‌ای','سیب‌زمینی','پیاز','سیر','هویج','کاهو','اسفناج','کلم','گل‌کلم','بروکلی','کدو','کدوحلوایی','تربچه','شلغم','بامیه','کرفس','لوبیاسبز','نخودفرنگی'],
+ 'درختان میوه':['سیب','گلابی','به','هلو','شلیل','زردآلو','گیلاس','آلبالو','آلو','انار','انجیر','خرمالو','گردو','بادام','پسته','زیتون','خرما','انگور','کیوی','توت','توت‌فرنگی'],
+ 'مرکبات':['پرتقال','نارنگی','لیموترش','لیموشیرین','گریپ‌فروت','نارنج'],
+ 'حبوبات و روغنی':['نخود','عدس','لوبیا','باقلا','سویا','ماش','کلزا','آفتابگردان','کنجد'],
+ 'دارویی':['زعفران','نعناع','ریحان','آویشن','رزماری','بابونه','زیره','رازیانه','گشنیز','شوید','جعفری'],
+ 'زینتی و آپارتمانی':['رز','ارکیده','شمعدانی','آنتوریوم','فیکوس','سانسوریا','زامیفولیا','پتوس','مونسترا','دراسنا','کاکتوس','آلوئه‌ورا','سرخس','بونسای','لاله','نرگس','یاس']
 };
 
-function fillPlants(q = '') {
-  const old = $('plant').value;
-  $('plant').innerHTML = '<option value="">نامشخص</option>';
+function fillPlants(query = '') {
+ const select = $('plant');
+ const previous = select.value;
+ select.replaceChildren(new Option('نامشخص',''));
 
-  for (const [group, plants] of Object.entries(groups)) {
-    const filtered = plants.filter(p => p.includes(q.trim()));
-    if (!filtered.length) continue;
+ for (const [group, plants] of Object.entries(plantGroups)) {
+  const filtered = plants.filter(p => p.includes(query.trim()));
+  if (!filtered.length) continue;
 
-    const optgroup = document.createElement('optgroup');
-    optgroup.label = group;
+  const optgroup = document.createElement('optgroup');
+  optgroup.label = group;
 
-    filtered.forEach(p => {
-      const option = document.createElement('option');
-      option.value = p;
-      option.textContent = p;
-      optgroup.appendChild(option);
-    });
-
-    $('plant').appendChild(optgroup);
+  for (const name of filtered) {
+   optgroup.appendChild(new Option(name, name));
   }
 
-  $('plant').value = old;
+  select.appendChild(optgroup);
+ }
+
+ if ([...select.options].some(o => o.value === previous)) {
+  select.value = previous;
+ }
 }
 
 fillPlants();
+$('plantSearch').addEventListener('input', e => fillPlants(e.target.value));
 
-$('plantSearch').addEventListener('input', e => {
-  fillPlants(e.target.value);
+let selectedFile = null;
+let classifier = null;
+let lastReport = null;
+let busy = false;
+let previewURL = null;
+
+function setStatus(message, type = '') {
+ $('status').className = 'status' + (type ? ' ' + type : '');
+ $('status').textContent = message;
+}
+
+function escapeHTML(value) {
+ return String(value ?? '').replace(/[&<>"']/g, char => ({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+ }[char]));
+}
+
+function timeout(promise, milliseconds, message) {
+ let timer;
+ return Promise.race([
+  promise,
+  new Promise((_, reject) => {
+   timer = setTimeout(() => reject(new Error(message)), milliseconds);
+  })
+ ]).finally(() => clearTimeout(timer));
+}
+
+function resetResult() {
+ $('result').style.display = 'none';
+ $('resultBody').replaceChildren();
+ $('save').disabled = true;
+ lastReport = null;
+}
+
+function setImage(file) {
+ if (!file) return;
+
+ if (!file.type.startsWith('image/')) {
+  setStatus('فایل انتخاب‌شده تصویر نیست.', 'error');
+  return;
+ }
+
+ if (file.size > 15 * 1024 * 1024) {
+  setStatus('حجم عکس بیشتر از ۱۵ مگابایت است. عکس کوچک‌تری انتخاب کن.', 'error');
+  return;
+ }
+
+ selectedFile = file;
+
+ if (previewURL) URL.revokeObjectURL(previewURL);
+ previewURL = URL.createObjectURL(file);
+
+ const img = $('preview');
+ img.onload = () => setStatus('عکس آماده است؛ حالا روی تحلیل تصویر بزن.');
+ img.onerror = () => setStatus('بارگذاری عکس ناموفق بود؛ عکس دیگری انتخاب کن.', 'error');
+ img.src = previewURL;
+ img.style.display = 'block';
+
+ resetResult();
+ setStatus('عکس انتخاب شد؛ برای شروع تحلیل روی دکمه بزن.');
+}
+
+$('camera').addEventListener('change', e => {
+ setImage(e.target.files[0]);
+ e.target.value = '';
 });
 
-let file = null;
-let model = null;
-let last = null;
-
-function status(message, type = '') {
-  $('status').className = 'status ' + type;
-  $('status').textContent = message;
-}
-
-function reset() {
-  $('result').style.display = 'none';
-  $('resultBody').innerHTML = '';
-  $('save').disabled = true;
-  last = null;
-}
-
-function setFile(f) {
-  if (!f) return;
-
-  if (!f.type.startsWith('image/')) {
-    status('فایل انتخاب‌شده تصویر نیست.', 'error');
-    return;
-  }
-
-  file = f;
-  $('preview').src = URL.createObjectURL(f);
-  $('preview').style.display = 'block';
-
-  reset();
-  status('عکس آماده است؛ برای تحلیل روی دکمه هوش مصنوعی بزن.');
-}
-
-$('camera').addEventListener('change', e => setFile(e.target.files[0]));
-$('gallery').addEventListener('change', e => setFile(e.target.files[0]));
+$('gallery').addEventListener('change', e => {
+ setImage(e.target.files[0]);
+ e.target.value = '';
+});
 
 $('clearPhoto').onclick = () => {
-  file = null;
-  $('preview').removeAttribute('src');
-  $('preview').style.display = 'none';
-  $('camera').value = '';
-  $('gallery').value = '';
-  reset();
-  status('عکس پاک شد.');
+ selectedFile = null;
+ if (previewURL) URL.revokeObjectURL(previewURL);
+ previewURL = null;
+
+ $('preview').removeAttribute('src');
+ $('preview').style.display = 'none';
+ $('camera').value = '';
+ $('gallery').value = '';
+
+ resetResult();
+ setStatus('عکس پاک شد.');
 };
 
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
-  }[c]));
-}
-
-const crops = {
-  'Apple':'سیب',
-  'Blueberry':'بلوبری',
-  'Cherry (including sour)':'گیلاس/آلبالو',
-  'Corn (maize)':'ذرت',
-  'Grape':'انگور',
-  'Orange':'پرتقال',
-  'Peach':'هلو',
-  'Pepper, bell':'فلفل دلمه‌ای',
-  'Potato':'سیب‌زمینی',
-  'Raspberry':'تمشک',
-  'Soybean':'سویا',
-  'Squash':'کدو',
-  'Strawberry':'توت‌فرنگی',
-  'Tomato':'گوجه‌فرنگی'
+const cropNames = {
+ 'Apple':'سیب',
+ 'Blueberry':'بلوبری',
+ 'Cherry (including sour)':'گیلاس/آلبالو',
+ 'Corn (maize)':'ذرت',
+ 'Grape':'انگور',
+ 'Orange':'پرتقال',
+ 'Peach':'هلو',
+ 'Pepper, bell':'فلفل دلمه‌ای',
+ 'Potato':'سیب‌زمینی',
+ 'Raspberry':'تمشک',
+ 'Soybean':'سویا',
+ 'Squash':'کدو',
+ 'Strawberry':'توت‌فرنگی',
+ 'Tomato':'گوجه‌فرنگی'
 };
 
-const diseases = [
-  ['healthy','سالم'],
-  ['Apple_scab','لکه‌سیاه سیب'],
-  ['Black_rot','پوسیدگی سیاه'],
-  ['Cedar_apple_rust','زنگار سیب'],
-  ['Powdery_mildew','سفیدک پودری'],
-  ['Common_rust','زنگ معمولی'],
-  ['Northern_Leaf_Blight','بلایت برگ شمالی'],
-  ['Bacterial_spot','لکه باکتریایی'],
-  ['Early_blight','بلایت زودرس'],
-  ['Late_blight','بلایت دیررس'],
-  ['Leaf_Mold','کپک برگ'],
-  ['Septoria_leaf_spot','لکه برگی سپتوریا'],
-  ['Spider_mites','کنه تارعنکبوتی'],
-  ['Target_Spot','لکه هدفی'],
-  ['Yellow_Leaf_Curl_Virus','ویروس پیچیدگی زرد برگ'],
-  ['Mosaic_virus','ویروس موزاییک'],
-  ['Leaf_scorch','سوختگی برگ'],
-  ['Haunglongbing','گرینینگ مرکبات'],
-  ['Esca','بیماری اسکا'],
-  ['Leaf_blight','بلایت برگ']
-];
+const diseaseNames = {
+ 'healthy':'سالم',
+ 'Apple scab':'لکه‌سیاه سیب',
+ 'Black rot':'پوسیدگی سیاه',
+ 'Cedar apple rust':'زنگار سیب',
+ 'Powdery mildew':'سفیدک پودری',
+ 'Common rust':'زنگ معمولی',
+ 'Northern Leaf Blight':'بلایت برگ شمالی',
+ 'Bacterial spot':'لکه باکتریایی',
+ 'Early blight':'بلایت زودرس',
+ 'Late blight':'بلایت دیررس',
+ 'Leaf Mold':'کپک برگ',
+ 'Septoria leaf spot':'لکه برگی سپتوریا',
+ 'Spider mites':'کنه تارعنکبوتی',
+ 'Target Spot':'لکه هدفی',
+ 'Yellow Leaf Curl Virus':'ویروس پیچیدگی زرد برگ',
+ 'Mosaic virus':'ویروس موزاییک',
+ 'Leaf scorch':'سوختگی برگ',
+ 'Haunglongbing':'گرینینگ مرکبات',
+ 'Esca':'بیماری اسکا',
+ 'Leaf blight':'بلایت برگ'
+};
 
-function parse(label) {
-  let [crop, disease = ''] = String(label).split('___');
+function parseLabel(label) {
+ const parts = String(label || '').split('___');
+ const cropEnglish = (parts[0] || '').replaceAll('_',' ').trim();
+ const diseaseEnglish = (parts.slice(1).join(' ') || '').replaceAll('_',' ').trim();
 
-  crop = crop.replaceAll('_', ' ');
-  disease = disease.replaceAll('_', ' ').replaceAll('  ', ' ');
+ let crop = cropNames[cropEnglish] || cropEnglish || 'گیاه نامشخص';
+ let disease = diseaseEnglish || 'کلاس نامشخص';
 
-  const cropFa = crops[crop] || crop;
-  let diseaseFa = disease;
-
-  for (const [en, fa] of diseases) {
-    if (
-      disease.toLowerCase().includes(en.toLowerCase().replaceAll('_', ' ')) ||
-      disease.toLowerCase().includes(en.toLowerCase())
-    ) {
-      diseaseFa = fa;
-      break;
-    }
+ for (const [key, value] of Object.entries(diseaseNames)) {
+  if (diseaseEnglish.toLowerCase().includes(key.toLowerCase())) {
+   disease = value;
+   break;
   }
+ }
 
-  return { crop: cropFa, disease: diseaseFa };
+ return {crop, disease};
 }
 
-function percent(n) {
-  return Math.round(Number(n || 0) * 100);
+function percent(score) {
+ return Math.round(Number(score || 0) * 100);
 }
 
 $('analyze').onclick = async () => {
-  if (!file) {
-    status('اول یک عکس انتخاب کن.', 'error');
-    return;
+ if (busy) return;
+
+ if (!selectedFile) {
+  setStatus('ابتدا یک عکس انتخاب کن.', 'error');
+  return;
+ }
+
+ busy = true;
+ const button = $('analyze');
+ button.disabled = true;
+ button.textContent = 'در حال تحلیل…';
+
+ try {
+  const image = $('preview');
+
+  if (!image.complete || !image.naturalWidth) {
+   await timeout(new Promise((resolve, reject) => {
+    image.onload = resolve;
+    image.onerror = () => reject(new Error('خواندن تصویر ناموفق بود.'));
+   }), 15000, 'بارگذاری عکس بیش از حد طول کشید.');
   }
 
-  const button = $('analyze');
-  button.disabled = true;
-  button.textContent = 'در حال تحلیل…';
+  if (!classifier) {
+   setStatus('در حال دانلود مدل سازگار با fp32؛ اولین اجرا ممکن است چند دقیقه طول بکشد.', 'warn');
 
-  try {
-    if (!model) {
-      status('در حال دانلود و آماده‌سازی مدل؛ بار اول ممکن است طول بکشد.', 'warn');
-
-      model = await pipeline(
-        'image-classification',
-        'onnx-community/mobilenet_v2_1.0_224-plant-disease-identification-ONNX',
-        { device: 'wasm' }
-      );
-    }
-
-    const img = $('preview');
-
-    if (!img.complete) {
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-    }
-
-    status('مدل در حال بررسی تصویر است…', 'warn');
-
-    const output = await model(img, { top_k: 3 });
-    const top = parse(output[0].label);
-
-    const symptoms = [
-      ...document.querySelectorAll('#symptoms input:checked')
-    ].map(x => x.value);
-
-    const note = $('notes').value.trim();
-    const selected = $('plant').value;
-
-    const topRows = output.map((prediction, i) => {
-      const item = parse(prediction.label);
-      const score = percent(prediction.score);
-
-      return `
-        <div class="row">
-          <b>${i + 1}. ${esc(item.crop)} — ${esc(item.disease)}</b>
-          <span class="muted">(${score}٪ امتیاز مدل)</span>
-          <div class="meter">
-            <span style="width:${Math.min(100, score)}%"></span>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    let warning = '';
-
-    const supportedPlants = [
-      'سیب','بلوبری','گیلاس','آلبالو','ذرت','انگور',
-      'پرتقال','هلو','فلفل دلمه‌ای','سیب‌زمینی','تمشک',
-      'سویا','کدو','توت‌فرنگی','گوجه‌فرنگی'
-    ];
-
-    if (selected && !supportedPlants.includes(selected)) {
-      warning = 'این گیاه خارج از پوشش مدل است؛ نتیجه برای آن قابل اتکا نیست.';
-    } else if (
-      selected &&
-      top.crop !== selected &&
-      !(selected === 'آلبالو' && top.crop.includes('گیلاس'))
-    ) {
-      warning = 'حدس مدل با گیاه انتخابی متفاوت است؛ نتیجه را با احتیاط بررسی کن.';
-    }
-
-    const advice = top.disease === 'سالم'
-      ? 'مدل برگ را در گروه سالم قرار داده؛ اما عکس به‌تنهایی سلامت کامل گیاه را ثابت نمی‌کند.'
-      : 'این فقط یک حدس تصویری است. برگ‌های دیگر و پشت برگ را هم بررسی کن و پیش از مصرف سم با کارشناس گیاه‌پزشکی مشورت کن.';
-
-    last = {
-      date: new Date().toLocaleString('fa-IR'),
-      plant: selected || top.crop,
-      crop: top.crop,
-      disease: top.disease,
-      score: output[0].score,
-      symptoms,
-      note
-    };
-
-    $('resultBody').innerHTML = `
-      <div class="status ${output[0].score < 0.55 ? 'warn' : ''}">
-        <b>حدس برتر:</b> ${esc(top.crop)} — ${esc(top.disease)}<br>
-        <span class="muted">
-          امتیاز مدل ${percent(output[0].score)}٪ است و احتمال قطعیِ تشخیص نیست.
-        </span>
-      </div>
-
-      ${warning ? `<div class="status warn">${esc(warning)}</div>` : ''}
-
-      <h3>سه حدس برتر</h3>
-      ${topRows}
-
-      <h3>راهنمای اولیه</h3>
-      <p>${advice}</p>
-
-      ${symptoms.length
-        ? `<p><b>علائم ثبت‌شده:</b> ${esc(symptoms.join('، '))}</p>`
-        : ''}
-
-      ${note
-        ? `<p><b>یادداشت:</b> ${esc(note)}</p>`
-        : ''}
-
-      <p class="muted">
-        محدودیت: مدل مبتنی بر مجموعه PlantVillage با ۳۸ کلاس از ۱۴ گروه گیاهی است
-        و تصاویر آن عمدتاً شرایط کنترل‌شده دارند. ممکن است عکس مزرعه یا بیماری
-        خارج از کلاس‌ها را اشتباه تشخیص دهد.
-      </p>
-    `;
-
-    $('result').style.display = 'block';
-    $('save').disabled = false;
-    status('تحلیل انجام شد؛ نتیجه را راهنمای اولیه بدان.');
-    $('result').scrollIntoView({ behavior: 'smooth' });
-
-  } catch (error) {
-    console.error(error);
-    status(
-      'مدل اجرا نشد. اینترنت را بررسی کن و صفحه را در Chrome باز کن؛ سپس دوباره تلاش کن.',
-      'error'
-    );
-  } finally {
-    button.disabled = false;
-    button.textContent = '🧠 تحلیل هوش مصنوعی';
+   classifier = await timeout(
+    pipeline('image-classification', MODEL_ID, {
+     device: 'wasm',
+     dtype: 'fp32'
+    }),
+    MODEL_TIMEOUT,
+    'دانلود یا آماده‌سازی مدل بیش از ۴ دقیقه طول کشید.'
+   );
   }
+
+  setStatus('مدل آماده شد؛ در حال تحلیل تصویر…', 'warn');
+
+  const predictions = await timeout(
+   classifier(image, {top_k: 3}),
+   ANALYSIS_TIMEOUT,
+   'تحلیل تصویر بیش از ۹۰ ثانیه طول کشید.'
+  );
+
+  if (!Array.isArray(predictions) ||
+      predictions.length === 0 ||
+      !predictions[0].label) {
+   throw new Error('مدل نتیجه معتبری برنگرداند.');
+  }
+
+  const top = parseLabel(predictions[0].label);
+  const symptoms = [...document.querySelectorAll('#symptoms input:checked')]
+   .map(input => input.value);
+  const note = $('notes').value.trim();
+  const selectedPlant = $('plant').value;
+
+  const rows = predictions.map((prediction, index) => {
+   const item = parseLabel(prediction.label);
+   const score = percent(prediction.score);
+   const safeScore = Math.max(0, Math.min(100, score));
+
+   return `
+    <div class="row">
+     <b>${index + 1}. ${escapeHTML(item.crop)} — ${escapeHTML(item.disease)}</b>
+     <span class="muted">(${score}٪ امتیاز مدل)</span>
+     <div class="meter"><span style="width:${safeScore}%"></span></div>
+    </div>`;
+  }).join('');
+
+  const supported = [
+   'سیب','بلوبری','گیلاس/آلبالو','ذرت','انگور','پرتقال','هلو',
+   'فلفل دلمه‌ای','سیب‌زمینی','تمشک','سویا','کدو','توت‌فرنگی','گوجه‌فرنگی'
+  ];
+
+  let warning = '';
+
+  if (selectedPlant && !supported.includes(selectedPlant)) {
+   warning = 'گیاه انتخابی ممکن است خارج از پوشش آموزشی مدل باشد؛ نتیجه قابل اتکا نیست.';
+  } else if (selectedPlant && top.crop !== selectedPlant) {
+   warning = 'حدس مدل با گیاه انتخابی مطابقت ندارد؛ نتیجه را با احتیاط بررسی کن.';
+  }
+
+  const advice = top.disease === 'سالم'
+   ? 'مدل تصویر را در گروه سالم قرار داده است؛ این نتیجه سلامت کامل گیاه را ثابت نمی‌کند.'
+   : 'این نتیجه یک حدس تصویری است. برگ‌های دیگر و پشت برگ را نیز بررسی کن و قبل از مصرف هر نوع سم با کارشناس گیاه‌پزشکی مشورت کن.';
+
+  lastReport = {
+   date: new Date().toLocaleString('fa-IR'),
+   plant: selectedPlant || top.crop,
+   crop: top.crop,
+   disease: top.disease,
+   score: predictions[0].score,
+   symptoms,
+   note
+  };
+
+  $('resultBody').innerHTML = `
+   <div class="status ${predictions[0].score < 0.55 ? 'warn' : ''}">
+    <b>حدس برتر مدل:</b> ${escapeHTML(top.crop)} — ${escapeHTML(top.disease)}
+    <br><span class="muted">امتیاز مدل: ${percent(predictions[0].score)}٪؛ این عدد احتمال قطعی بیماری نیست.</span>
+   </div>
+   ${warning ? `<div class="status warn">${escapeHTML(warning)}</div>` : ''}
+   <h3>سه حدس برتر</h3>
+   ${rows}
+   <h3>راهنمای اولیه</h3>
+   <p>${advice}</p>
+   ${symptoms.length ? `<p><b>علائم ثبت‌شده:</b> ${escapeHTML(symptoms.join('، '))}</p>` : ''}
+   ${note ? `<p><b>توضیحات:</b> ${escapeHTML(note)}</p>` : ''}
+   <p class="muted">مدل روی تصاویر و کلاس‌های آموزشی مشخصی آموزش دیده است؛ نور، کیفیت عکس و نوع گیاه می‌توانند نتیجه را تغییر دهند.</p>
+  `;
+
+  $('result').style.display = 'block';
+  $('save').disabled = false;
+  setStatus('تحلیل انجام شد. نتیجه را راهنمای اولیه بدان.');
+  $('result').scrollIntoView({behavior:'smooth', block:'start'});
+
+ } catch (error) {
+  console.error('Plant analysis error:', error);
+
+  classifier = null;
+
+  let message = error?.message || 'خطای ناشناخته';
+
+  if (/ConvInteger|implementation/i.test(message)) {
+   message = 'مدل با موتور اجرای مرورگر سازگار نیست. باید فایل ONNX سازگار دیگری انتخاب شود. جزئیات: ' + message;
+  } else if (/fetch|network|download|timeout/i.test(message)) {
+   message = 'مدل دانلود نشد. اتصال اینترنت و دسترسی به Hugging Face را بررسی کن. جزئیات: ' + message;
+  }
+
+  setStatus('تحلیل انجام نشد: ' + message, 'error');
+
+ } finally {
+  busy = false;
+  button.disabled = false;
+  button.textContent = '🧠 تحلیل تصویر';
+ }
 };
 
-function historyLoad() {
-  let reports = [];
+function readReports() {
+ try {
+  const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  return Array.isArray(data) ? data : [];
+ } catch {
+  return [];
+ }
+}
 
-  try {
-    reports = JSON.parse(localStorage.getItem('giyahban_reports') || '[]');
-  } catch {}
+function writeReports(reports) {
+ try {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(reports));
+  return true;
+ } catch (error) {
+  setStatus('ذخیره گزارش در این مرورگر ممکن نشد.', 'error');
+  return false;
+ }
+}
 
-  if (!reports.length) {
-    $('history').innerHTML =
-      '<p class="muted">هنوز گزارشی ذخیره نشده است.</p>';
-    return;
-  }
+function loadHistory() {
+ const reports = readReports();
 
-  $('history').innerHTML = reports.map((report, i) => `
-    <div class="history">
-      <b>${esc(report.plant)} — ${esc(report.disease)}</b>
-      <span class="pill">${esc(report.date)}</span>
+ if (!reports.length) {
+  $('history').innerHTML = '<p class="muted">هنوز گزارشی ذخیره نشده است.</p>';
+  return;
+ }
 
-      <div class="muted">
-        امتیاز: ${percent(report.score)}٪
-        ${report.symptoms?.length
-          ? '| علائم: ' + esc(report.symptoms.join('، '))
-          : ''}
-      </div>
+ $('history').innerHTML = reports.map((report, index) => `
+  <div class="history">
+   <b>${escapeHTML(report.plant)} — ${escapeHTML(report.disease)}</b>
+   <span class="pill">${escapeHTML(report.date)}</span>
+   <div class="muted">امتیاز مدل: ${percent(report.score)}٪</div>
+   <button class="outline" type="button" data-delete="${index}">حذف گزارش</button>
+  </div>
+ `).join('');
 
-      <button class="outline" data-del="${i}">حذف گزارش</button>
-    </div>
-  `).join('');
-
-  document.querySelectorAll('[data-del]').forEach(button => {
-    button.onclick = () => {
-      const reports = JSON.parse(
-        localStorage.getItem('giyahban_reports') || '[]'
-      );
-
-      reports.splice(Number(button.dataset.del), 1);
-
-      localStorage.setItem('giyahban_reports', JSON.stringify(reports));
-      historyLoad();
-    };
-  });
+ document.querySelectorAll('[data-delete]').forEach(button => {
+  button.onclick = () => {
+   const reports = readReports();
+   reports.splice(Number(button.dataset.delete), 1);
+   if (writeReports(reports)) loadHistory();
+  };
+ });
 }
 
 $('save').onclick = () => {
-  if (!last) return;
+ if (!lastReport) return;
 
-  let reports = [];
+ const reports = readReports();
+ reports.unshift(lastReport);
 
-  try {
-    reports = JSON.parse(localStorage.getItem('giyahban_reports') || '[]');
-  } catch {}
-
-  reports.unshift(last);
-
-  localStorage.setItem(
-    'giyahban_reports',
-    JSON.stringify(reports.slice(0, 30))
-  );
-
-  historyLoad();
-  status('گزارش روی همین دستگاه ذخیره شد.');
+ if (writeReports(reports.slice(0, 30))) {
+  loadHistory();
+  setStatus('گزارش در همین مرورگر ذخیره شد.');
+ }
 };
 
 $('clearHistory').onclick = () => {
-  if (confirm('همه گزارش‌ها پاک شوند؟')) {
-    localStorage.removeItem('giyahban_reports');
-    historyLoad();
-  }
+ if (!confirm('همه گزارش‌های ذخیره‌شده پاک شوند؟')) return;
+
+ try {
+  localStorage.removeItem(HISTORY_KEY);
+  loadHistory();
+ } catch {
+  setStatus('پاک‌کردن گزارش‌ها ممکن نشد.', 'error');
+ }
 };
 
 $('print').onclick = () => window.print();
 
 $('another').onclick = () => {
-  $('clearPhoto').click();
-  $('notes').value = '';
+ if (busy) return;
 
-  document.querySelectorAll('#symptoms input').forEach(input => {
-    input.checked = false;
-  });
+ $('clearPhoto').click();
+ $('notes').value = '';
+ document.querySelectorAll('#symptoms input').forEach(input => {
+  input.checked = false;
+ });
 };
 
-historyLoad();
+loadHistory();
 </script>
 </body>
 </html>
